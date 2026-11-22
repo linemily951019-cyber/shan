@@ -159,7 +159,7 @@
         >📖 操作指引</button>
 
         <a
-          href="index.html"
+          href="https://linemily951019-cyber.github.io/1151midterm/"
           class="px-3 py-1.5 rounded-full text-xs font-semibold border transition hover:opacity-85"
           style="border-color: var(--border-line); background-color: var(--bg-card);"
         >社團首頁</a>
@@ -192,7 +192,7 @@
     <div id="mobile-drawer" class="hidden md:hidden border-t px-4 py-3.5 space-y-3 shadow-xl" style="background-color: var(--bg-paper); border-color: var(--border-line);">
       <div class="grid grid-cols-2 gap-2">
         <a
-          href="index.html"
+          href="https://linemily951019-cyber.github.io/1151midterm/"
           class="text-center px-3 py-2.5 rounded-xl text-xs font-bold border flex items-center justify-center gap-1.5"
           style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);"
         >🏠 回社團首頁</a>
@@ -308,17 +308,27 @@
           </div>
         </div>
 
-        <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-2.5 sm:p-3 border-t flex items-center gap-2 flex-shrink-0" style="background-color: var(--bg-paper); border-color: var(--border-line);">
-          <button type="button" id="mic-btn" onclick="toggleVoiceInput()" aria-label="語音輸入" title="語音輸入" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 border" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--primary);">
-            🎤
-          </button>
-          <input id="chat-input" type="text" autocomplete="off" placeholder="請輸入你的問題..." class="flex-1 min-w-0 px-4 py-2.5 rounded-full border text-sm" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);" />
-          <button type="submit" aria-label="送出訊息" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white shadow-sm" style="background-color: var(--primary);">
-            <svg class="w-5 h-5 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+        <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-2 sm:p-3 border-t flex items-center gap-1.5 sm:gap-2 flex-shrink-0 w-full" style="background-color: var(--bg-paper); border-color: var(--border-line);">
+          <button type="button" id="mic-btn" onclick="toggleVoiceInput()" aria-label="語音輸入" title="點擊開始語音輸入" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 border transition hover:opacity-85" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--primary);">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"></path>
             </svg>
           </button>
-        </form>
+          <input
+            id="chat-input"
+            type="text"
+            autocomplete="off"
+            placeholder="請輸入問題..."
+            class="flex-1 min-w-0 w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border text-sm focus:outline-none focus:ring-2"
+            style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);"
+           />
+           <button type="submit" aria-label="送出訊息" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white shadow-sm transition hover:opacity-90 active:scale-95" style="background-color: var(--primary);">
+             <svg class="w-4 h-4 sm:w-5 sm:h-5 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+               <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+              </svg>
+            </button>
+          </form>
       </div>
 
     </div>
@@ -332,12 +342,21 @@
         <button type="button" onclick="closeShanshanGuide()" aria-label="關閉操作指引" class="w-8 h-8 rounded-full border flex items-center justify-center text-sm font-bold" style="border-color: var(--border-line); background-color: var(--bg-card);">✕</button>
       </div>
 
-      <ul class="space-y-2.5 text-sm leading-relaxed">
-        <li>• <strong>快速提問與打字</strong>：點選左側／訊息下方的快速問題，或在輸入框打字按 <code>Enter</code> 送出。</li>
-        <li>• <strong>戳膳膳與關鍵字互動</strong>：直接點／戳膳膳角色會切換不同動作；提到美食／DIY、檢查、拍照、加油或驚訝等關鍵字，膳膳也會做出對應反應。</li>
+<!-- 電腦／平板版操作指引 -->
+      <ul class="hidden md:block space-y-2.5 text-sm leading-relaxed">
+        <li>• <strong>快速提問與打字</strong>：點選左側的快速問題，或在輸入框打字按 <code>Enter</code> 送出。</li>
+        <li>• <strong>戳膳膳與關鍵字互動</strong>：直接點／戳左側膳膳角色會切換不同動作；提到美食／DIY、檢查、拍照、加油或驚訝等關鍵字，膳膳也會做出對應反應。</li>
         <li>• <strong>語音輸入與朗讀</strong>：按 <code>🎤</code> 可用語音提問；膳膳每則回覆下方都有「🔊 朗讀」可聽語音，再點一次可停止。</li>
-        <li>• <strong>背景音樂與音量</strong>：電腦版可點上方「🎶 音樂」調整音量；手機版可從右上角漢堡選單開啟音樂並調整音量。</li>
-        <li>• <strong>鍵盤與顯示操作</strong>：按 <code>Tab</code> / <code>Shift + Tab</code> 切換焦點、<code>Enter</code> 啟動按鈕，也可調整字體大小與深淺色模式。</li>
+        <li>• <strong>背景音樂與音量</strong>：點上方「🎶 音樂」按鈕即可開關音樂與調整音量。</li>
+        <li>• <strong>鍵盤與顯示操作</strong>：按 <code>Tab</code> / <code>Shift + Tab</code> 切換焦點、<code>Enter</code> 啟動按鈕，上方也可調整字體大小與深淺色模式。</li>
+      </ul>
+
+      <!-- 手機版操作指引 -->
+      <ul class="md:hidden space-y-2.5 text-sm leading-relaxed">
+        <li>• <strong>快速提問與打字</strong>：點選訊息下方的快速問題按鈕，或在底部輸入框打字按送出。</li>
+        <li>• <strong>語音輸入與朗讀</strong>：按 <code>🎤</code> 可用語音提問；膳膳每則回覆下方都有「🔊 朗讀」可聽語音，再點一次可停止。</li>
+        <li>• <strong>音樂、字體與首頁</strong>：點右上角「☰」選單即可開關背景音樂、調整音量大小、縮放字體或返回社團首頁。</li>
+        <li>• <strong>深淺色切換</strong>：點右上角月亮／太陽圖示即可切換深淺色模式。</li>
       </ul>
 
       <div class="pt-1 text-right">
