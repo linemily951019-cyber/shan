@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" data-theme="light">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>膳膳小幫手｜淡江大學膳食督導義務工作團</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-outer: #E8EEF2;
+      --bg-dot: #CFD9E0;
+      --bg-paper: #F8FAFB;
+      --bg-card: #FFFFFF;
+      --primary: #89A4B8;
+      --primary-hover: #6B879C;
+      --primary-soft: rgba(137, 164, 184, 0.15);
+      --accent: #ECD189;
+      --accent-text: #4A3F22;
+      --stamp-red: #D98A8A;
+      --text-main: #3A434A;
+      --text-muted: #6C7A86;
+      --border-line: #D5DEE5;
+      --font-scale: 16px;
+    }
+
+    [data-theme="dark"] {
+      --bg-outer: #161B20;
+      --bg-dot: #232C34;
+      --bg-paper: #1E252B;
+      --bg-card: #273038;
+      --primary: #6E8CA3;
+      --primary-hover: #89A4B8;
+      --primary-soft: rgba(110, 140, 163, 0.22);
+      --accent: #D8BC73;
+      --accent-text: #1E252B;
+      --stamp-red: #E09999;
+      --text-main: #E6ECF0;
+      --text-muted: #9AA8B4;
+      --border-line: #34414C;
+    }
+
+    html { font-size: var(--font-scale); }
+
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: var(--bg-outer);
+      background-image: radial-gradient(var(--bg-dot) 1.25px, transparent 1.25px);
+      background-size: 22px 22px;
+      color: var(--text-main);
+      transition: background-color 0.3s ease, color 0.3s ease;
+      height: 100dvh;
+      overflow: hidden;
+    }
+
+    .shanshan-avatar {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+
+    .mascot-stage {
+      background: linear-gradient(160deg, var(--primary-soft) 0%, var(--bg-card) 100%);
+      border: 1px dashed var(--primary);
+    }
+
+    .mic-recording {
+      background-color: var(--stamp-red) !important;
+      color: #FFFFFF !important;
+      border-color: var(--stamp-red) !important;
+      animation: micPulse 1.2s ease-in-out infinite;
+    }
+
+    @keyframes micPulse {
+      0%, 100% { box-shadow: 0 0 0 0 rgba(217, 138, 138, 0.55); }
+      50% { box-shadow: 0 0 0 10px rgba(217, 138, 138, 0); }
+    }
+
+    a:focus-visible, button:focus-visible, input:focus-visible, [tabindex]:focus-visible {
+      outline: 3px solid #D97706 !important;
+      outline-offset: 2px !important;
+    }
+  </style>
+</head>
+
+<body class="flex flex-col">
+  <!-- 頂部導覽列 -->
+  <header class="relative z-30 border-b flex-shrink-0" style="background-color: var(--bg-paper); border-color: var(--border-line);">
+    <div class="max-w-5xl mx-auto px-3 sm:px-5 h-14 flex items-center justify-between gap-2">
+      <!-- 左側：頭像與標題 -->
+      <div class="flex items-center gap-2.5 min-w-0">
+        <div class="w-9 h-9 rounded-full overflow-hidden border flex-shrink-0" style="background-color: var(--accent); border-color: var(--border-line);">
+          <img src="images/shanshan-avatar.png" alt="膳膳頭像" class="shanshan-avatar" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+          <span class="hidden w-full h-full flex items-center justify-center text-base">🍱</span>
+        </div>
+        <div class="min-w-0">
+          <div class="font-bold text-sm leading-tight truncate">膳膳小幫手</div>
+          <div class="chat-status-text text-[11px] truncate" style="color: var(--text-muted);">歡迎來到淡江大學膳食督導義務工作團！</div>
+        </div>
+      </div>
+
+      <!-- 右側：電腦版按鈕群 -->
+      <div class="hidden md:flex items-center gap-2 flex-shrink-0">
+        <div class="relative">
+          <button
+            type="button"
+            onclick="toggleDesktopAudioPanel()"
+            aria-label="開啟音樂與音量設定"
+            class="bgm-status-btn px-3 py-1.5 rounded-full text-xs font-bold border transition"
+            style="border-color: var(--border-line); background-color: var(--bg-card); color: var(--text-main);"
+          >🎶 音樂：關</button>
+
+          <div
+            id="desktop-audio-panel"
+            class="hidden absolute right-0 mt-2 w-60 rounded-2xl border p-3.5 shadow-xl space-y-3 text-xs z-40"
+            style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);"
+          >
+            <div class="flex items-center justify-between font-bold border-b pb-2" style="border-color: var(--border-line);">
+              <span>🎵 背景音樂設定</span>
+              <button type="button" onclick="toggleDesktopAudioPanel(false)" aria-label="關閉音樂設定" class="opacity-70 hover:opacity-100">✕</button>
+            </div>
+            <div class="flex items-center justify-between">
+              <span>播放狀態</span>
+              <button
+                type="button"
+                onclick="toggleShanshanBgm()"
+                class="bgm-toggle-pill px-3 py-1 rounded-full font-bold border transition"
+                style="border-color: var(--border-line); background-color: var(--bg-paper);"
+              >已關閉</button>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between">
+                <label for="desktop-vol-range">🎚️ 音量大小</label>
+                <span class="vol-label font-semibold">35%</span>
+              </div>
+              <input
+                id="desktop-vol-range"
+                type="range"
+                min="0"
+                max="100"
+                value="35"
+                oninput="setShanshanVolume(this.value)"
+                class="vol-slider w-full accent-[#89A4B8] cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onclick="openShanshanGuide()"
+          class="px-3 py-1.5 rounded-full text-xs font-bold border transition"
+          style="border-color: var(--primary); background-color: var(--bg-card); color: var(--text-main);"
+        >📖 操作指引</button>
+
+        <a
+          href="index.html"
+          class="px-3 py-1.5 rounded-full text-xs font-semibold border transition hover:opacity-85"
+          style="border-color: var(--border-line); background-color: var(--bg-card);"
+        >社團首頁</a>
+
+        <div class="flex items-center rounded-full border p-0.5" style="border-color: var(--border-line); background-color: var(--bg-card);">
+          <button type="button" onclick="changeFontSize(-1)" aria-label="縮小字體" class="px-2 py-0.5 text-xs font-bold">A-</button>
+          <span class="text-xs opacity-30">|</span>
+          <button type="button" onclick="changeFontSize(1)" aria-label="放大字體" class="px-2 py-0.5 text-xs font-bold">A+</button>
+        </div>
+
+        <button type="button" onclick="toggleTheme()" aria-label="切換深淺色模式" class="w-8 h-8 rounded-full border flex items-center justify-center text-sm" style="border-color: var(--border-line); background-color: var(--bg-card);">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+
+      <!-- 右側：手機版只留深淺色鈕 + 漢堡選單鈕 -->
+      <div class="flex md:hidden items-center gap-1.5 flex-shrink-0">
+        <button type="button" onclick="toggleTheme()" aria-label="切換深淺色模式" class="w-9 h-9 rounded-full border flex items-center justify-center text-sm" style="border-color: var(--border-line); background-color: var(--bg-card);">
+          <span class="theme-icon">🌙</span>
+        </button>
+        <button type="button" onclick="toggleMobileDrawer()" aria-label="開啟功能選單" class="w-9 h-9 rounded-full border flex items-center justify-center" style="border-color: var(--border-line); background-color: var(--bg-card);">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- 手機版漢堡選單抽屜 -->
+    <div id="mobile-drawer" class="hidden md:hidden border-t px-4 py-3.5 space-y-3 shadow-xl" style="background-color: var(--bg-paper); border-color: var(--border-line);">
+      <div class="grid grid-cols-2 gap-2">
+        <a
+          href="index.html"
+          class="text-center px-3 py-2.5 rounded-xl text-xs font-bold border flex items-center justify-center gap-1.5"
+          style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);"
+        >🏠 回社團首頁</a>
+        <button
+          type="button"
+          onclick="openShanshanGuide(); toggleMobileDrawer(false);"
+          class="px-3 py-2.5 rounded-xl text-xs font-bold border flex items-center justify-center gap-1.5"
+          style="background-color: var(--bg-card); border-color: var(--primary); color: var(--text-main);"
+        >📖 操作指引</button>
+      </div>
+
+      <div class="p-3 rounded-xl border space-y-2.5" style="background-color: var(--bg-card); border-color: var(--border-line);">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold">🎵 背景音樂</span>
+          <button
+            type="button"
+            onclick="toggleShanshanBgm()"
+            class="bgm-toggle-pill px-3 py-1 rounded-full text-xs font-bold border transition"
+            style="border-color: var(--border-line); background-color: var(--bg-paper);"
+          >已關閉</button>
+        </div>
+        <div class="space-y-1">
+          <div class="flex items-center justify-between text-xs">
+            <label for="mobile-vol-range">🎚️ 音量大小</label>
+            <span class="vol-label font-semibold">35%</span>
+          </div>
+          <input
+            id="mobile-vol-range"
+            type="range"
+            min="0"
+            max="100"
+            value="35"
+            oninput="setShanshanVolume(this.value)"
+            class="vol-slider w-full accent-[#89A4B8] cursor-pointer"
+          />
+        </div>
+      </div>
+
+      <div class="flex items-center justify-between px-3 py-2 rounded-xl border text-xs" style="background-color: var(--bg-card); border-color: var(--border-line);">
+        <span class="font-bold">🔠 字體大小</span>
+        <div class="flex items-center gap-2">
+          <button type="button" onclick="changeFontSize(-1)" class="px-3 py-1 rounded-lg border font-bold" style="border-color: var(--border-line); background-color: var(--bg-paper);">A- 縮小</button>
+          <button type="button" onclick="changeFontSize(1)" class="px-3 py-1 rounded-lg border font-bold" style="border-color: var(--border-line); background-color: var(--bg-paper);">A+ 放大</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- 主要聊天區 -->
+  <main class="flex-1 w-full max-w-5xl mx-auto md:p-6 flex min-h-0">
+    <div class="w-full md:rounded-2xl md:border md:p-5 grid grid-cols-1 md:grid-cols-12 md:gap-5 h-full min-h-0 md:shadow-sm" style="background-color: var(--bg-paper); border-color: var(--border-line);">
+
+      <!-- 電腦版左欄：膳膳動態角色舞台（支援點擊/按鍵戳膳膳）+ 快速提問 -->
+      <div class="hidden md:flex md:col-span-5 flex-col gap-4 h-full min-h-0">
+        <div
+          id="mascot-stage"
+          data-state="idle"
+          role="button"
+          tabindex="0"
+          aria-label="戳一下膳膳，切換不同動作"
+          title="點我戳一下膳膳！"
+          onclick="pokeMascot()"
+          onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();pokeMascot();}"
+          class="mascot-stage cursor-pointer rounded-2xl px-4 pt-4 pb-0 flex flex-col items-center justify-end relative h-[225px] flex-shrink-0 overflow-hidden"
+        >
+          <span id="mascot-badge" class="absolute top-3 left-3 text-[11px] font-bold px-2.5 py-0.5 rounded-full z-10" style="background-color: var(--accent); color: var(--accent-text);">待機中 ✨</span>
+          <span id="mascot-fx" class="absolute top-4 right-5 text-xl transition-opacity duration-300 opacity-0 z-10">💭</span>
+          <img id="mascot-img" src="images/shanshan/wait/wait1.png" alt="膳膳" class="block max-h-[195px] w-auto object-contain object-bottom" />
+        </div>
+
+        <div class="rounded-2xl border flex-1 flex flex-col overflow-hidden min-h-0" style="background-color: var(--bg-card); border-color: var(--border-line);">
+          <div class="px-4 py-2.5 text-xs font-bold border-b" style="background-color: var(--primary-soft); border-color: var(--border-line);">
+            💡 不知道從哪邊開始問？點擊直接發問
+          </div>
+          <div class="p-3 space-y-2 overflow-y-auto flex-1">
+            <button type="button" onclick="sendMessage(this.textContent)" class="w-full text-left text-xs px-3 py-2 rounded-xl border transition hover:translate-x-0.5" style="border-color: var(--border-line); background-color: var(--bg-paper);">我想加入膳督團，請問報名方式跟社費是多少？</button>
+            <button type="button" onclick="sendMessage(this.textContent)" class="w-full text-left text-xs px-3 py-2 rounded-xl border transition hover:translate-x-0.5" style="border-color: var(--border-line); background-color: var(--bg-paper);">學餐檢查有哪些組別和地點？</button>
+            <button type="button" onclick="sendMessage(this.textContent)" class="w-full text-left text-xs px-3 py-2 rounded-xl border transition hover:translate-x-0.5" style="border-color: var(--border-line); background-color: var(--bg-paper);">臨時不能去檢查可以請假或找人代班嗎？</button>
+            <button type="button" onclick="sendMessage(this.textContent)" class="w-full text-left text-xs px-3 py-2 rounded-xl border transition hover:translate-x-0.5" style="border-color: var(--border-line); background-color: var(--bg-paper);">參與認證和執行認證要怎麼拿到？</button>
+            <button type="button" onclick="sendMessage(this.textContent)" class="w-full text-left text-xs px-3 py-2 rounded-xl border transition hover:translate-x-0.5" style="border-color: var(--border-line); background-color: var(--bg-paper);">DIY 活動需要繳材料費或自己帶東西嗎？</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右欄：聊天視窗 -->
+      <div class="md:col-span-7 flex flex-col md:rounded-2xl md:border h-full min-h-0 overflow-hidden" style="background-color: var(--bg-card); border-color: var(--border-line);">
+        <div class="hidden md:flex items-center justify-between px-4 py-3 border-b flex-shrink-0" style="background-color: var(--primary); color: #FFFFFF; border-color: var(--border-line);">
+          <div class="font-bold text-sm">膳膳線上諮詢</div>
+          <span class="text-[11px] px-2.5 py-0.5 rounded-full bg-white/20">線上諮詢中</span>
+        </div>
+
+        <div id="chat-messages" class="flex-1 overflow-y-auto p-3.5 sm:p-4 space-y-4">
+          <div class="flex items-start gap-2.5">
+            <div class="w-9 h-9 rounded-full flex-shrink-0 border overflow-hidden flex items-center justify-center shadow-sm" style="background-color: var(--accent); border-color: var(--border-line);">
+              <img src="images/shanshan-avatar.png" alt="膳膳頭像" class="shanshan-avatar" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+              <span class="hidden text-lg">👧🏻</span>
+            </div>
+            <div class="max-w-[84%] space-y-2.5">
+              <div class="px-4 py-3 rounded-2xl rounded-tl-sm text-sm leading-relaxed shadow-sm" style="background-color: var(--primary-soft);">
+                <p>嗨嗨～我是膳膳！🍱 淡江大學膳督團的專屬小幫手。想知道怎麼加入社團、學餐檢查都在做什麼，或是想了解健康飲食 DIY 活動，都可以問我喔！✨</p>
+                <button type="button" onclick="speakText(this, '嗨嗨～我是膳膳！淡江大學膳督團的專屬小幫手。想知道怎麼加入社團、學餐檢查都在做什麼，或是想了解健康飲食 DIY 活動，都可以問我喔！')" class="mt-2 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">
+                  🔊 朗讀
+                </button>
+              </div>
+              <div class="md:hidden flex flex-wrap gap-1.5">
+                <button type="button" onclick="sendMessage('我想加入膳督團，請問報名方式跟社費是多少？')" class="px-2.5 py-1.5 rounded-full text-xs font-medium border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">報名方式與社費</button>
+                <button type="button" onclick="sendMessage('學餐檢查有哪些組別和地點？')" class="px-2.5 py-1.5 rounded-full text-xs font-medium border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">檢查組別與地點</button>
+                <button type="button" onclick="sendMessage('臨時不能去檢查可以請假或找人代班嗎？')" class="px-2.5 py-1.5 rounded-full text-xs font-medium border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">請假與補班規定</button>
+                <button type="button" onclick="sendMessage('參與認證和執行認證要怎麼拿到？')" class="px-2.5 py-1.5 rounded-full text-xs font-medium border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">如何拿到認證</button>
+                <button type="button" onclick="sendMessage('DIY 活動需要繳材料費或自己帶東西嗎？')" class="px-2.5 py-1.5 rounded-full text-xs font-medium border" style="border-color: var(--primary); color: var(--primary); background-color: var(--bg-card);">DIY 活動須知</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form id="chat-form" onsubmit="handleChatSubmit(event)" class="p-2.5 sm:p-3 border-t flex items-center gap-2 flex-shrink-0" style="background-color: var(--bg-paper); border-color: var(--border-line);">
+          <button type="button" id="mic-btn" onclick="toggleVoiceInput()" aria-label="語音輸入" title="語音輸入" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 border" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--primary);">
+            🎤
+          </button>
+          <input id="chat-input" type="text" autocomplete="off" placeholder="請輸入你的問題..." class="flex-1 min-w-0 px-4 py-2.5 rounded-full border text-sm" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);" />
+          <button type="submit" aria-label="送出訊息" class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white shadow-sm" style="background-color: var(--primary);">
+            <svg class="w-5 h-5 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+            </svg>
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- 膳膳專屬操作指引 Modal -->
+  <div id="shanshan-guide-modal" role="dialog" aria-modal="true" aria-labelledby="shanshan-guide-title" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/45">
+    <div class="w-full max-w-md rounded-2xl border p-5 sm:p-6 shadow-2xl space-y-4" style="background-color: var(--bg-paper); border-color: var(--border-line); color: var(--text-main);">
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-line);">
+        <h2 id="shanshan-guide-title" class="text-base sm:text-lg font-bold">🍱 膳膳小幫手操作指引</h2>
+        <button type="button" onclick="closeShanshanGuide()" aria-label="關閉操作指引" class="w-8 h-8 rounded-full border flex items-center justify-center text-sm font-bold" style="border-color: var(--border-line); background-color: var(--bg-card);">✕</button>
+      </div>
+
+      <ul class="space-y-2.5 text-sm leading-relaxed">
+        <li>• <strong>快速提問與打字</strong>：點選左側／訊息下方的快速問題，或在輸入框打字按 <code>Enter</code> 送出。</li>
+        <li>• <strong>戳膳膳與關鍵字互動</strong>：直接點／戳膳膳角色會切換不同動作；提到美食／DIY、檢查、拍照、加油或驚訝等關鍵字，膳膳也會做出對應反應。</li>
+        <li>• <strong>語音輸入與朗讀</strong>：按 <code>🎤</code> 可用語音提問；膳膳每則回覆下方都有「🔊 朗讀」可聽語音，再點一次可停止。</li>
+        <li>• <strong>背景音樂與音量</strong>：電腦版可點上方「🎶 音樂」調整音量；手機版可從右上角漢堡選單開啟音樂並調整音量。</li>
+        <li>• <strong>鍵盤與顯示操作</strong>：按 <code>Tab</code> / <code>Shift + Tab</code> 切換焦點、<code>Enter</code> 啟動按鈕，也可調整字體大小與深淺色模式。</li>
+      </ul>
+
+      <div class="pt-1 text-right">
+        <button type="button" onclick="closeShanshanGuide()" class="px-5 py-2 rounded-full text-sm font-bold" style="background-color: var(--accent); color: var(--accent-text);">我知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const CHATPDF_API_KEY = 'sec_8dNtsByaSZqfrpYlvKEHvw5zv3ET247b';
+    const CHATPDF_SOURCE_ID = 'cha_uscugEUnPJlFLl7vvjSEJ';
+    const BGM_SRC = 'music.mp3';
+    const MASCOT_BASE_PATH = 'images/shanshan';
+    const MASCOT_IMG_EXT = 'png';
+
+    // 對應資料夾：eat, cheer, hi, photo, sleep, surprise, think, wait, check
+    const MASCOT_ANIMS = {
+      idle:     { folder: 'wait',     frames: 4, speed: 180, label: '待機中 ✨',        fx: '',   offsetY: 0 },
+      hi:       { folder: 'hi',       frames: 6, speed: 140, label: '嗨嗨～歡迎！👋',   fx: '👋', offsetY: 0 },
+      thinking: { folder: 'think',    frames: 6, speed: 150, label: '膳膳思考中...',    fx: '💭', offsetY: 0 },
+      eat:      { folder: 'eat',      frames: 6, speed: 150, label: '開動囉～好香！🍽️', fx: '🍽️', offsetY: 0 },
+      cheer:    { folder: 'cheer',    frames: 5, speed: 140, label: '幫你加油打氣！📣', fx: '📣', offsetY: 14 },
+      photo:    { folder: 'photo',    frames: 6, speed: 140, label: '拍照留念！📸',     fx: '📸', offsetY: 12 },
+      check:    { folder: 'check',    frames: 6, speed: 140, label: '稽核檢查中！📋',   fx: '🔍', offsetY: 14 },
+      sleep:    { folder: 'sleep',    frames: 6, speed: 240, label: '有點想睡覺...',    fx: '💤', offsetY: 0 },
+      surprise: { folder: 'surprise', frames: 6, speed: 120, label: '哇～好驚訝！',      fx: '❗', offsetY: 14 }
+    };
+
+    const KEYWORD_ANIM_RULES = [
+      { state: 'eat',      keywords: ['吃', '美食', '料理', 'diy', '零食', '飲料', '好吃', '午餐', '晚餐', '下午茶', '餐具', '環保餐具'] },
+      { state: 'photo',    keywords: ['拍照', '照片', '打卡', '留證', '相機', '輪播'] },
+      { state: 'check',    keywords: ['檢查', '稽核', '衛生', '試紙', '油炸', '過氧化氫', '食材', '班表', '補班', '請假', '代班'] },
+      { state: 'cheer',    keywords: ['加油', '太棒', '讚', '恭喜', '認證', '獎勵金', '500', '全勤', '加入', '報名', '歡迎'] },
+      { state: 'surprise', keywords: ['哇', '真的嗎', '蛤', '驚訝', '竟然', '不會吧', '天啊', '退費'] },
+      { state: 'sleep',    keywords: ['睡', '累', '睏', '晚安', '休息', '放空'] },
+      { state: 'hi',       keywords: ['你好', '嗨', '哈囉', '早安', '午安', '在嗎', '請問'] }
+    ];
+
+    const POKE_STATES = ['hi', 'eat', 'cheer', 'photo', 'check', 'surprise', 'sleep'];
+    let pokeIndex = 0;
+    let mascotRevertTimer = null;
+
+    const bgmAudio = new Audio(BGM_SRC);
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.35;
+
+    let isBgmPlaying = false;
+    let currentFontSize = 16;
+    let mascotAnimTimer = null;
+    let mascotFrame = 1;
+    let chatHistory = [];
+    let currentSpeakBtn = null;
+    let currentUtterance = null;
+    let recognition = null;
+    let isRecording = false;
+
+    function toggleMobileDrawer(force) {
+      const drawer = document.getElementById('mobile-drawer');
+      if (!drawer) return;
+      drawer.classList.toggle('hidden', typeof force === 'boolean' ? !force : undefined);
+    }
+
+    function toggleDesktopAudioPanel(force) {
+      const panel = document.getElementById('desktop-audio-panel');
+      if (!panel) return;
+      panel.classList.toggle('hidden', typeof force === 'boolean' ? !force : undefined);
+    }
+
+    function updateBgmUI() {
+      document.querySelectorAll('.bgm-status-btn').forEach(btn => {
+        btn.textContent = isBgmPlaying ? '🎵 音樂：開' : '🎶 音樂：關';
+        btn.style.backgroundColor = isBgmPlaying ? 'var(--accent)' : 'var(--bg-card)';
+        btn.style.color = isBgmPlaying ? 'var(--accent-text)' : 'var(--text-main)';
+        btn.style.borderColor = isBgmPlaying ? 'var(--accent)' : 'var(--border-line)';
+      });
+
+      document.querySelectorAll('.bgm-toggle-pill').forEach(btn => {
+        btn.textContent = isBgmPlaying ? '播放中' : '已關閉';
+        btn.style.backgroundColor = isBgmPlaying ? 'var(--accent)' : 'var(--bg-paper)';
+        btn.style.color = isBgmPlaying ? 'var(--accent-text)' : 'var(--text-main)';
+        btn.style.borderColor = isBgmPlaying ? 'var(--accent)' : 'var(--border-line)';
+      });
+    }
+
+    function toggleShanshanBgm() {
+      if (isBgmPlaying) {
+        bgmAudio.pause();
+        isBgmPlaying = false;
+        updateBgmUI();
+      } else {
+        bgmAudio.play().then(() => {
+          isBgmPlaying = true;
+          updateBgmUI();
+        }).catch(() => {});
+      }
+    }
+
+    function setShanshanVolume(val) {
+      const num = Math.min(100, Math.max(0, Number(val) || 0));
+      bgmAudio.volume = num / 100;
+      document.querySelectorAll('.vol-label').forEach(el => el.textContent = `${num}%`);
+      document.querySelectorAll('.vol-slider').forEach(el => el.value = num);
+    }
+
+    function openShanshanGuide() {
+      const modal = document.getElementById('shanshan-guide-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      const closeBtn = modal.querySelector('button[aria-label="關閉操作指引"]');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeShanshanGuide() {
+      const modal = document.getElementById('shanshan-guide-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+    }
+
+    function changeFontSize(delta) {
+      currentFontSize = Math.min(20, Math.max(13, currentFontSize + delta));
+      document.documentElement.style.setProperty('--font-scale', `${currentFontSize}px`);
+    }
+
+    function toggleTheme() {
+      const html = document.documentElement;
+      const isDark = html.getAttribute('data-theme') === 'dark';
+      const next = isDark ? 'light' : 'dark';
+      html.setAttribute('data-theme', next);
+      document.querySelectorAll('.theme-icon').forEach(el => el.textContent = next === 'dark' ? '☀️' : '🌙');
+    }
+
+    function setChatStatus(text) {
+      document.querySelectorAll('.chat-status-text').forEach(el => el.textContent = text);
+    }
+
+    function setMascotState(state) {
+      const stage = document.getElementById('mascot-stage');
+      const badge = document.getElementById('mascot-badge');
+      const fx = document.getElementById('mascot-fx');
+      const imgEl = document.getElementById('mascot-img');
+      if (!stage || !badge || !fx || !imgEl) return;
+
+      const anim = MASCOT_ANIMS[state] || MASCOT_ANIMS.idle;
+      stage.setAttribute('data-state', state);
+      badge.textContent = anim.label || '待機中 ✨';
+      fx.textContent = anim.fx || '';
+      fx.style.opacity = anim.fx ? '1' : '0';
+      imgEl.style.transform = `translateY(${anim.offsetY || 0}px)`;
+
+      clearInterval(mascotAnimTimer);
+      mascotFrame = 1;
+      const playNext = () => {
+        imgEl.src = `${MASCOT_BASE_PATH}/${anim.folder}/${anim.folder}${mascotFrame}.${MASCOT_IMG_EXT}`;
+        mascotFrame = (mascotFrame % anim.frames) + 1;
+      };
+      playNext();
+      mascotAnimTimer = setInterval(playNext, anim.speed);
+    }
+
+    function triggerTemporaryMascot(state, duration = 3000) {
+      if (!MASCOT_ANIMS[state]) return;
+      clearTimeout(mascotRevertTimer);
+      setMascotState(state);
+      mascotRevertTimer = setTimeout(() => {
+        setMascotState('idle');
+      }, duration);
+    }
+
+    function detectKeywordMascotState(text) {
+      const lower = text.toLowerCase();
+      for (const rule of KEYWORD_ANIM_RULES) {
+        if (rule.keywords.some(kw => lower.includes(kw.toLowerCase()))) {
+          return rule.state;
+        }
+      }
+      return null;
+    }
+
+    function pokeMascot() {
+      const nextState = POKE_STATES[pokeIndex % POKE_STATES.length];
+      pokeIndex += 1;
+      triggerTemporaryMascot(nextState, 2800);
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.getVoices();
+    }
+
+    function speakText(btn, rawText) {
+      if (!('speechSynthesis' in window)) return;
+      const synth = window.speechSynthesis;
+      if (synth.speaking && currentSpeakBtn === btn) {
+        synth.cancel();
+        btn.textContent = '🔊 朗讀';
+        currentSpeakBtn = null;
+        return;
+      }
+      synth.cancel();
+      synth.resume();
+      if (currentSpeakBtn) currentSpeakBtn.textContent = '🔊 朗讀';
+
+      const cleanText = rawText.replace(/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/gu, '').trim();
+      if (!cleanText) return;
+
+      setTimeout(() => {
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = 'zh-TW';
+        utter.rate = 1.05;
+        const voices = synth.getVoices();
+        const zhVoice = voices.find(v => v.lang === 'zh-TW') || voices.find(v => v.lang.startsWith('zh'));
+        if (zhVoice) utter.voice = zhVoice;
+        currentUtterance = utter;
+        currentSpeakBtn = btn;
+        btn.textContent = '⏹️ 停止';
+        utter.onend = utter.onerror = () => {
+          btn.textContent = '🔊 朗讀';
+          if (currentSpeakBtn === btn) currentSpeakBtn = null;
+        };
+        synth.speak(utter);
+      }, 60);
+    }
+
+    function appendMessage(role, text) {
+      const box = document.getElementById('chat-messages');
+      if (!box) return;
+      const wrap = document.createElement('div');
+      if (role === 'user') {
+        wrap.className = 'flex justify-end';
+        wrap.innerHTML = `<div class="max-w-[80%] px-4 py-2.5 rounded-2xl rounded-tr-sm text-sm text-white shadow-sm" style="background-color: var(--primary);">${escapeHtml(text)}</div>`;
+      } else {
+        wrap.className = 'flex items-start gap-2.5';
+        wrap.innerHTML = `
+          <div class="w-9 h-9 rounded-full flex-shrink-0 border overflow-hidden flex items-center justify-center shadow-sm" style="background-color: var(--accent); border-color: var(--border-line);">
+            <img src="images/shanshan-avatar.png" alt="膳膳頭像" class="shanshan-avatar" onerror="this.style.display='none'; this.nextElementSibling.classList.remove('hidden');" />
+            <span class="hidden text-lg">👧🏻</span>
+          </div>
+          <div class="bot-bubble max-w-[84%] px-4 py-3 rounded-2xl rounded-tl-sm text-sm leading-relaxed shadow-sm" style="background-color: var(--primary-soft);">
+            <div>${escapeHtml(text).replace(/\n/g, '<br>')}</div>
+          </div>
+        `;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.textContent = '🔊 朗讀';
+        btn.className = 'mt-2 inline-flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-full border';
+        btn.style.borderColor = 'var(--primary)';
+        btn.style.color = 'var(--primary)';
+        btn.style.backgroundColor = 'var(--bg-card)';
+        btn.addEventListener('click', () => speakText(btn, text));
+        wrap.querySelector('.bot-bubble').appendChild(btn);
+      }
+      box.appendChild(wrap);
+      box.scrollTop = box.scrollHeight;
+    }
+
+    function stripCitations(text) {
+      return text.replace(/\[(?:T|P)?\d+(?:,\s*(?:T|P)?\d+)*\]/gi, '').trim();
+    }
+
+    async function sendMessage(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return;
+      clearTimeout(mascotRevertTimer);
+      appendMessage('user', trimmed);
+      setChatStatus('膳膳思考中...');
+      setMascotState('thinking');
+
+      try {
+        const systemPrompt =
+          '你是「膳膳」，淡江大學膳食督導義務工作團 20 歲的大二女生小幫手。' +
+          '如果是日常打招呼或閒聊（例如：你好、嗨、早安、謝謝、掰掰），請自然親切地用第一人稱（我、膳膳）回應對方，並熱情詢問有什麼社團問題想了解。' +
+          '如果是詢問社團規定、活動、學餐檢查等具體資訊，請只根據知識庫回答，絕對禁止輸出任何來源引用標記（如 [T1]、[1]）；知識庫找不到的資訊不要亂猜，請引導對方親洽衛保組（M111）或私訊 IG（tkusdt_club）。' +
+          '請用繁體中文親切活潑回答，控制在 3 到 5 句話內，可適度加入表情符號。\n\n問題：';
+
+        const res = await fetch('https://api.chatpdf.com/v1/chats/message', {
+          method: 'POST',
+          headers: { 'x-api-key': CHATPDF_API_KEY, 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            sourceId: CHATPDF_SOURCE_ID,
+            messages: [...chatHistory.slice(-6), { role: 'user', content: systemPrompt + trimmed }]
+          })
+        });
+        if (!res.ok) throw new Error('API Error');
+        const data = await res.json();
+        const replyText = stripCitations(data.content || '');
+        chatHistory.push({ role: 'user', content: trimmed }, { role: 'assistant', content: replyText });
+        appendMessage('bot', replyText);
+        setChatStatus('歡迎來到淡江大學膳食督導義務工作團！');
+        const matchedState = detectKeywordMascotState(`${trimmed} ${replyText}`);
+        triggerTemporaryMascot(matchedState || 'hi', 3000);
+      } catch (e) {
+        appendMessage('bot', '哎呀，系統好像有點卡卡的！若有緊急問題，請親洽衛保組或私訊 IG：tkusdt_club！');
+        setChatStatus('歡迎來到淡江大學膳食督導義務工作團！');
+        triggerTemporaryMascot('surprise', 2800);
+      }
+    }
+
+    function handleChatSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('chat-input');
+      if (!input) return;
+      const val = input.value;
+      input.value = '';
+      sendMessage(val);
+    }
+
+    function toggleVoiceInput() {
+      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SR) return;
+      const micBtn = document.getElementById('mic-btn');
+      if (isRecording && recognition) { recognition.stop(); return; }
+      recognition = new SR();
+      recognition.lang = 'zh-TW';
+      isRecording = true;
+      micBtn.classList.add('mic-recording');
+      recognition.onresult = (ev) => {
+        const t = ev.results[0]?.[0]?.transcript;
+        if (t) sendMessage(t);
+      };
+      recognition.onend = recognition.onerror = () => {
+        isRecording = false;
+        micBtn.classList.remove('mic-recording');
+      };
+      recognition.start();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      updateBgmUI();
+      setMascotState('hi');
+      setTimeout(() => setMascotState('idle'), 1800);
+    });
+  </script>
+</body>
+</html>
