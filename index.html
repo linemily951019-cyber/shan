@@ -104,7 +104,7 @@
         </div>
       </div>
 
-      <!-- 右側：電腦版按鈕群 -->
+      <!-- 右側：電腦／平板版按鈕群 -->
       <div class="hidden md:flex items-center gap-2 flex-shrink-0">
         <div class="relative">
           <button
@@ -150,6 +150,14 @@
             </div>
           </div>
         </div>
+
+        <button
+          type="button"
+          onclick="openShanshanQr()"
+          aria-label="放大檢視手機版 QR Code"
+          class="px-3 py-1.5 rounded-full text-xs font-bold border transition"
+          style="border-color: var(--accent); background-color: var(--accent); color: var(--accent-text);"
+        >📱 手機掃描</button>
 
         <button
           type="button"
@@ -315,20 +323,13 @@
               <path stroke-linecap="round" stroke-linejoin="round" d="M19 10v2a7 7 0 01-14 0v-2M12 19v4m-4 0h8"></path>
             </svg>
           </button>
-          <input
-            id="chat-input"
-            type="text"
-            autocomplete="off"
-            placeholder="請輸入問題..."
-            class="flex-1 min-w-0 w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border text-sm focus:outline-none focus:ring-2"
-            style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);"
-           />
-           <button type="submit" aria-label="送出訊息" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white shadow-sm transition hover:opacity-90 active:scale-95" style="background-color: var(--primary);">
-             <svg class="w-4 h-4 sm:w-5 sm:h-5 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-               <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
-              </svg>
-            </button>
-          </form>
+          <input id="chat-input" type="text" autocomplete="off" placeholder="請輸入問題..." class="flex-1 min-w-0 w-full px-3 sm:px-4 py-2 sm:py-2.5 rounded-full border text-sm focus:outline-none focus:ring-2" style="background-color: var(--bg-card); border-color: var(--border-line); color: var(--text-main);" />
+          <button type="submit" aria-label="送出訊息" class="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center flex-shrink-0 text-white shadow-sm transition hover:opacity-90 active:scale-95" style="background-color: var(--primary);">
+            <svg class="w-4 h-4 sm:w-5 sm:h-5 translate-x-0.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"></path>
+            </svg>
+          </button>
+        </form>
       </div>
 
     </div>
@@ -342,13 +343,13 @@
         <button type="button" onclick="closeShanshanGuide()" aria-label="關閉操作指引" class="w-8 h-8 rounded-full border flex items-center justify-center text-sm font-bold" style="border-color: var(--border-line); background-color: var(--bg-card);">✕</button>
       </div>
 
-<!-- 電腦／平板版操作指引 -->
+      <!-- 電腦／平板版操作指引 -->
       <ul class="hidden md:block space-y-2.5 text-sm leading-relaxed">
         <li>• <strong>快速提問與打字</strong>：點選左側的快速問題，或在輸入框打字按 <code>Enter</code> 送出。</li>
         <li>• <strong>戳膳膳與關鍵字互動</strong>：直接點／戳左側膳膳角色會切換不同動作；提到美食／DIY、檢查、拍照、加油或驚訝等關鍵字，膳膳也會做出對應反應。</li>
         <li>• <strong>語音輸入與朗讀</strong>：按 <code>🎤</code> 可用語音提問；膳膳每則回覆下方都有「🔊 朗讀」可聽語音，再點一次可停止。</li>
         <li>• <strong>背景音樂與音量</strong>：點上方「🎶 音樂」按鈕即可開關音樂與調整音量。</li>
-        <li>• <strong>鍵盤與顯示操作</strong>：按 <code>Tab</code> / <code>Shift + Tab</code> 切換焦點、<code>Enter</code> 啟動按鈕，上方也可調整字體大小與深淺色模式。</li>
+        <li>• <strong>鍵盤與顯示操作</strong>：按 <code>Tab</code> / <code>Shift + Tab</code> 切換焦點、<code>Enter</code> 啟動按鈕，上方也可調整字體大小、深淺色模式或開啟手機掃描 QR Code。</li>
       </ul>
 
       <!-- 手機版操作指引 -->
@@ -362,6 +363,44 @@
       <div class="pt-1 text-right">
         <button type="button" onclick="closeShanshanGuide()" class="px-5 py-2 rounded-full text-sm font-bold" style="background-color: var(--accent); color: var(--accent-text);">我知道了</button>
       </div>
+    </div>
+  </div>
+
+  <!-- 膳膳手機掃描 QR Code 彈窗 -->
+  <div
+    id="shanshan-qr-modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="shanshan-qr-title"
+    onclick="if (event.target === this) closeShanshanQr();"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50"
+  >
+    <div
+      class="w-full max-w-xs sm:max-w-sm rounded-2xl border p-6 shadow-2xl text-center space-y-4"
+      style="background-color: var(--bg-paper); border-color: var(--border-line); color: var(--text-main);"
+    >
+      <div class="flex items-center justify-between border-b pb-3" style="border-color: var(--border-line);">
+        <h2 id="shanshan-qr-title" class="text-base font-bold">📱 手機掃描找膳膳</h2>
+        <button
+          type="button"
+          onclick="closeShanshanQr()"
+          aria-label="關閉 QR Code 視窗"
+          class="w-8 h-8 rounded-full border flex items-center justify-center text-sm font-bold"
+          style="border-color: var(--border-line); background-color: var(--bg-card);"
+        >✕</button>
+      </div>
+
+      <div class="p-3 rounded-2xl bg-white inline-block shadow-sm border" style="border-color: var(--border-line);">
+        <img
+          src="images/qr.jpg"
+          alt="膳膳小幫手手機版 QR Code"
+          class="w-56 h-56 sm:w-64 sm:h-64 object-contain"
+        />
+      </div>
+
+      <p class="text-xs leading-relaxed" style="color: var(--text-muted);">
+        使用手機相機掃描上方 QR Code，即可在手機上直接跟膳膳聊天
+      </p>
     </div>
   </div>
 
@@ -471,6 +510,20 @@
 
     function closeShanshanGuide() {
       const modal = document.getElementById('shanshan-guide-modal');
+      if (!modal) return;
+      modal.classList.add('hidden');
+    }
+
+    function openShanshanQr() {
+      const modal = document.getElementById('shanshan-qr-modal');
+      if (!modal) return;
+      modal.classList.remove('hidden');
+      const closeBtn = modal.querySelector('button[aria-label="關閉 QR Code 視窗"]');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closeShanshanQr() {
+      const modal = document.getElementById('shanshan-qr-modal');
       if (!modal) return;
       modal.classList.add('hidden');
     }
